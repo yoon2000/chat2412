@@ -1,5 +1,6 @@
 package com.ll.chat2412.chat;
 
+import com.ll.chat2412.chat.dto.MessagesRequest;
 import com.ll.chat2412.chat.dto.MessagesResponse;
 import com.ll.chat2412.chat.dto.WriteMessageRequest;
 import com.ll.chat2412.chat.dto.WriteMessageResponse;
@@ -26,7 +27,25 @@ public class ChatController {
 
     @GetMapping("/messages")
     @ResponseBody
-    public RsData<MessagesResponse> messages(){
-        return new RsData("200", "메세지가 가져오기 성공", new MessagesResponse(chatMessages, chatMessages.size()));
+    public RsData<MessagesResponse> messages(MessagesRequest messagesRequest){
+
+        List<ChatMessage> messages = chatMessages;
+        if(messagesRequest.fromId() != null){
+            int index = -1;
+            for(int i=0; i<messages.size(); i++){
+                if(messages.get(i).getId() == messagesRequest.fromId()){
+                    index = i;
+                    break;
+                }
+            }
+
+            if(index != -1){
+                messages = messages.subList(index+1, messages.size());
+            }
+
+        }
+        return new RsData("200", "메세지가 가져오기 성공", new MessagesResponse(messages, chatMessages.size()));
     }
+
+
 }
