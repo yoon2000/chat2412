@@ -9,5 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class MessagesResponse {
+
     List<ChatMessage> chatMessages;
+    private int totalCount;
 }
