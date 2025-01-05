@@ -1,0 +1,17 @@
+server:
+    port: 8080
+spring:
+    output:
+        ansi:
+            enabled: always
+    thymeleaf:
+        cache: false
+        prefix: file:src/main/resources/templates/
+    devtools:
+        livereload:
+            enabled: true
+        restart:
+            enabled: true
+    jpa:
+        open-in-view:
+            exclude-patterns: /chat/messages, /chat/writeMessage # OSIV ?? ?? URL ?? ??
