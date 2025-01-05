@@ -1,3 +1,6 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <!-- 채팅 컨테이너 -->
 <div class="chat">
     <!-- 메시지 작성 폼 -->
@@ -108,15 +111,17 @@
   }
   Chat__loadMore(); // 최초에 한번 실행
 
-    // SSE 연결
-    // SSE는 단방향 무전기
-    // 방향 : 서버 -> 클라이언트
-    const sse = new EventSource("/sse/connect");
+  const socket = new SockJS("/ws");
+  const StompClient = Stomp.over(socket);
 
-    // 서버로부터 "chat__messageAdded" 라는 명령이 내려오면 Chat__loadMore 함수를 실행
-    sse.addEventListener('chat__messageAdded', e => {
-        Chat__loadMore();
+  StompClient.connect({}, (frame) => {
+  console.log('Connected: ' + frame);
+    StompClient.subscribe('/topic/chat/writeMessage', (data) => {
+      console.log(data.body);
+      Chat__loadMore();
     });
+  });
+
 
   // 채팅 메시지들 읽기 끝
 </script>
